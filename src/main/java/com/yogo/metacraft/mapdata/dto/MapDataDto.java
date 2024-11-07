@@ -1,6 +1,5 @@
-package com.yogo.metacraft.mapData.dto;
+package com.yogo.metacraft.mapdata.dto;
 
-import com.yogo.metacraft.mapData.domain.MapObject;
 import lombok.Data;
 
 import java.util.List;

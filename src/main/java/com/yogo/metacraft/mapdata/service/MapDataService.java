@@ -1,13 +1,13 @@
-package com.yogo.metacraft.mapData.service;
+package com.yogo.metacraft.mapdata.service;
 
-import com.yogo.metacraft.mapData.dto.MapDataDto;
-import com.yogo.metacraft.mapData.dto.MapObjectDto;
-import com.yogo.metacraft.mapData.domain.MapData;
-import com.yogo.metacraft.mapData.domain.MapObject;
-import com.yogo.metacraft.mapData.domain.PositionVector;
-import com.yogo.metacraft.mapData.domain.ScaleVector;
-import com.yogo.metacraft.mapData.domain.Quaternion;
-import com.yogo.metacraft.mapData.repository.MapDataRepository;
+import com.yogo.metacraft.mapdata.dto.MapDataDto;
+import com.yogo.metacraft.mapdata.dto.MapObjectDto;
+import com.yogo.metacraft.mapdata.domain.MapData;
+import com.yogo.metacraft.mapdata.domain.MapObject;
+import com.yogo.metacraft.mapdata.domain.PositionVector;
+import com.yogo.metacraft.mapdata.domain.ScaleVector;
+import com.yogo.metacraft.mapdata.domain.Quaternion;
+import com.yogo.metacraft.mapdata.repository.MapDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +22,8 @@ public class MapDataService {
     private MapDataRepository mapDataRepository;
 
     public MapData saveMapData(MapDataDto mapDataDto) {
-        MapData mapData = convertToMapDataEntity(mapDataDto);
-        return mapDataRepository.save(mapData);
+        MapData mapdata = convertToMapDataEntity(mapDataDto);
+        return mapDataRepository.save(mapdata);
     }
 
     private MapData convertToMapDataEntity(MapDataDto mapDataDto) {

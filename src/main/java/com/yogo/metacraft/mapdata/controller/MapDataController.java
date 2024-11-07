@@ -1,8 +1,8 @@
-package com.yogo.metacraft.mapData.controller;
+package com.yogo.metacraft.mapdata.controller;
 
-import com.yogo.metacraft.mapData.dto.MapDataDto;
-import com.yogo.metacraft.mapData.domain.MapData;
-import com.yogo.metacraft.mapData.service.MapDataService;
+import com.yogo.metacraft.mapdata.dto.MapDataDto;
+import com.yogo.metacraft.mapdata.domain.MapData;
+import com.yogo.metacraft.mapdata.service.MapDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

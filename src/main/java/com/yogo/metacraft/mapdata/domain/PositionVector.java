@@ -1,4 +1,4 @@
-package com.yogo.metacraft.mapData.domain;
+package com.yogo.metacraft.mapdata.domain;
 
 
 import jakarta.persistence.Column;

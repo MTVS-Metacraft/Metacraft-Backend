@@ -1,6 +1,6 @@
-package com.yogo.metacraft.mapData.repository;
+package com.yogo.metacraft.mapdata.repository;
 
-import com.yogo.metacraft.mapData.domain.MapData;
+import com.yogo.metacraft.mapdata.domain.MapData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

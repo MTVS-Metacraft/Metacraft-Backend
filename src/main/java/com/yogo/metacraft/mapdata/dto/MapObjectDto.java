@@ -1,9 +1,8 @@
-package com.yogo.metacraft.mapData.dto;
+package com.yogo.metacraft.mapdata.dto;
 
-import com.yogo.metacraft.mapData.domain.PositionVector;
-import com.yogo.metacraft.mapData.domain.Quaternion;
-import com.yogo.metacraft.mapData.domain.ScaleVector;
-import com.yogo.metacraft.mapData.domain.Vector;
+import com.yogo.metacraft.mapdata.domain.PositionVector;
+import com.yogo.metacraft.mapdata.domain.Quaternion;
+import com.yogo.metacraft.mapdata.domain.ScaleVector;
 import lombok.*;
 
 @Data
