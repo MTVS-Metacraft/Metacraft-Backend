@@ -17,8 +17,8 @@ public class MapObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String objectName;
-    private String prefabName;
+    private String objectName; // post로 mapName으로 요청하면 -> 검색기능, 검색 조회용으로 필요, return List<MapObject>
+    private String prefabName; // modelNum
 
     @Embedded
     private PositionVector position;
@@ -28,4 +28,6 @@ public class MapObject {
 
     @Embedded
     private ScaleVector scale;
+
+    //json
 }
