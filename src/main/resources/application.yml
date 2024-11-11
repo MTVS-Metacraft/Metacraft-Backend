@@ -26,8 +26,12 @@ spring:
   # MongoDB 설정
   data:
     mongodb:
-      host: localhost          # MongoDB 호스트
+      host: localhost         # MongoDB 호스트
       port: 27017             # MongoDB 포트
       database: metacraft     # 데이터베이스 이름
       # 또는 URI 형식으로도 설정 가능:
       # uri: mongodb://localhost:27017/metacraft
+
+firebase:
+  bucket-name: metacraft-48f9c.firebasestorage.app  # 개인걸로 확인하기
+  config-path: metacraft-service-account.json
