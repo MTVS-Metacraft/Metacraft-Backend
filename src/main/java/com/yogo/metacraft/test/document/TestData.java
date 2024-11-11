@@ -11,6 +11,8 @@ import java.util.List;
 @Document(collection = "test_data")  // MongoDB 컬렉션 이름 지정
 public class TestData {
     @Id
-    private String id;  // MongoDB의 자동생성 ID
+    private Long id;  // MongoDB의 자동생성 ID
+    private String mapName;
+    private String thumbnail;  // Firebase Storage URL
     private List<InstanceData> instanceDatas;
 }
