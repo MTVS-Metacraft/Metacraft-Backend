@@ -1,4 +1,4 @@
-package com.yogo.metacraft.test.service;
+package com.yogo.metacraft.mapdata.service;
 
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;

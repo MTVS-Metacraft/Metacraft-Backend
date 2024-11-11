@@ -1,4 +1,4 @@
-package com.yogo.metacraft.test.document;
+package com.yogo.metacraft.mapdata.document;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

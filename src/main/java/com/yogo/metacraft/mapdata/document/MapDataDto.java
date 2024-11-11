@@ -1,8 +1,8 @@
-package com.yogo.metacraft.test.document;
+package com.yogo.metacraft.mapdata.document;
 
 import java.util.List;
 
-public class TestDataDto {
+public class MapDataDto {
     private String mapName;
     private List<InstanceData> instanceData;
 
@@ -19,7 +19,7 @@ public class TestDataDto {
         return instanceData;
     }
 
-    public void setInstanceDatas(List<InstanceData> instanceData) {
+    public void setInstanceData(List<InstanceData> instanceData) {
         this.instanceData = instanceData;
     }
 }
