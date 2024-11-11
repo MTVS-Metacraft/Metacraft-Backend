@@ -4,7 +4,7 @@ import java.util.List;
 
 public class TestDataDto {
     private String mapName;
-    private List<InstanceData> instanceDatas;
+    private List<InstanceData> instanceData;
 
     // Getter, Setter
     public String getMapName() {
@@ -15,11 +15,11 @@ public class TestDataDto {
         this.mapName = mapName;
     }
 
-    public List<InstanceData> getInstanceDatas() {
-        return instanceDatas;
+    public List<InstanceData> getInstanceData() {
+        return instanceData;
     }
 
-    public void setInstanceDatas(List<InstanceData> instanceDatas) {
-        this.instanceDatas = instanceDatas;
+    public void setInstanceDatas(List<InstanceData> instanceData) {
+        this.instanceData = instanceData;
     }
 }

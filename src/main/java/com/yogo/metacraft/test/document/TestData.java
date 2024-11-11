@@ -15,5 +15,5 @@ public class TestData {
     private String id;  // MongoDB의 자동생성 ID
     private String mapName;
     private String thumbnail;  // Firebase Storage URL
-    private List<InstanceData> instanceDatas;
+    private List<InstanceData> instanceData;
 }
