@@ -1,6 +1,6 @@
-package com.yogo.metacraft.test.service;
+package com.yogo.metacraft.mapdata.service;
 
-import com.yogo.metacraft.test.document.DatabaseSequence;
+import com.yogo.metacraft.mapdata.document.DatabaseSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;

@@ -1,21 +1,18 @@
-package com.yogo.metacraft.test.service;
+package com.yogo.metacraft.mapdata.service;
 
-import com.yogo.metacraft.test.document.TestData;
-import com.yogo.metacraft.test.repository.TestDataRepository;
+import com.yogo.metacraft.mapdata.repository.MapDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MapService {
 
-    private final TestDataRepository repository;
-    private final FirebaseStorageService firebaseService;
-    private final SequenceGeneratorService sequenceGenerator;
+    private final MapDataRepository mapDataRepository;
+    private final FirebaseStorageService firebaseStorageService;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
 //    public TestData saveMapWithThumbnail(TestData data, MultipartFile thumbnail) throws IOException {
 //        // ID 생성

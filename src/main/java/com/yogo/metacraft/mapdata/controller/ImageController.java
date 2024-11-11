@@ -1,6 +1,6 @@
-package com.yogo.metacraft.test.controller;
+package com.yogo.metacraft.mapdata.controller;
 
-import com.yogo.metacraft.test.service.FirebaseStorageService;
+import com.yogo.metacraft.mapdata.service.FirebaseStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
