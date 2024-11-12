@@ -4,8 +4,7 @@ import lombok.Data;
 
 @Data
 public class InstanceData {
-    private Double modelNum;
-    private String mapName;
+    private Integer modelNum;
     private String serialNumber;
     private Position position;
     private Rotation rotation;
