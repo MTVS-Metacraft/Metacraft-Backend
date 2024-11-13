@@ -3,7 +3,10 @@ package com.yogo.metacraft.mapdata.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yogo.metacraft.common.CustomApiResponse;
 import com.yogo.metacraft.mapdata.document.MapData;
+import com.yogo.metacraft.mapdata.document.MapDataCardDto;
 import com.yogo.metacraft.mapdata.document.MapDataDto;
+import com.yogo.metacraft.mapdata.document.PageResponseDto;
+import com.yogo.metacraft.mapdata.exception.InvalidSortParameterException;
 import com.yogo.metacraft.mapdata.repository.MapDataRepository;
 import com.yogo.metacraft.mapdata.service.FirebaseStorageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +19,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +44,46 @@ public class MapDataController {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+
+    @Operation(summary = "MapData 카드 뷰 조회", description = "썸네일과 기본 정보만 포함된 MapData 카드 뷰를 페이징하여 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+    @GetMapping("cards")
+    public ResponseEntity<CustomApiResponse<PageResponseDto<MapDataCardDto>>> getMapDataCards (
+            @Parameter(description = "페이지 번호 ")
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "페이지당 카드 수", example = "12")
+            @RequestParam(defaultValue = "12") int size,
+            @Parameter(description = "정렬 기준 (mapName, id 등)", example = "맵 이름")
+            @RequestParam(defaultValue = "map_name") String sortBy,
+            @Parameter(description = "정렬 방향 (ASC, DESC)", example = "asc")
+            @RequestParam(defaultValue = "ASC") String direction
+    ) {
+        Sort.Direction sortDirection;
+        try {
+            sortDirection = Sort.Direction.fromString(direction.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidSortParameterException("Invalid sort direction: " + direction);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+
+        Page<MapData> mapDataPage = mapDataRepository.findAll(pageable);
+        Page<MapDataCardDto> cardDtoPage = mapDataPage.map(MapDataCardDto::new);
+        PageResponseDto<MapDataCardDto> response = new PageResponseDto<>(cardDtoPage);
+
+        return ResponseEntity.ok(new CustomApiResponse<>(
+                true,
+                "Map cards retrieved successfully",
+                response
+        ));
+    }
 
     @Operation(summary = "모든 MapData 조회", description = "데이터베이스에 저장된 모든 MapData를 조회합니다.")
     @ApiResponses({
@@ -67,7 +114,7 @@ public class MapDataController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "파일 업로드 및 데이터 저장 성공",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomApiResponse.class))),
+                            schema = @Schema(implementation = PageResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "JSON 파싱 실패"),
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
@@ -120,7 +167,7 @@ public class MapDataController {
 
             MapData mapData = new MapData();
 
-            System.out.println("mapDataDtoController"+ mapDataDto.toString());
+            System.out.println("mapDataDtoController" + mapDataDto.toString());
 
             mapData.setMapName(mapDataDto.getMapName());
             mapData.setInstanceData(mapDataDto.getInstanceData());
