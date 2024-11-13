@@ -44,6 +44,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-admin:9.2.0'
     implementation 'com.google.cloud:google-cloud-storage'  // Storage 의존성 추가
 
+    // 해싱
+    implementation 'org.mindrot:jbcrypt:0.4'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
