@@ -1,16 +1,16 @@
 package com.yogo.metacraft.common;
 
-public class ApiResponse<T> {
+public class CustomApiResponse<T> {
     private boolean success;
     private String message;
     private T data;
 
-    public ApiResponse(boolean success, String message) {
+    public CustomApiResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
 
-    public ApiResponse(boolean success, String message, T data) {
+    public CustomApiResponse(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
         this.data = data;

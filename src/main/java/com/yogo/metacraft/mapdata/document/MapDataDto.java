@@ -1,7 +1,10 @@
 package com.yogo.metacraft.mapdata.document;
 
+import lombok.ToString;
+
 import java.util.List;
 
+@ToString
 public class MapDataDto {
     private String mapName;
     private List<InstanceData> instanceData;

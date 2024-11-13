@@ -35,7 +35,6 @@ public class FirebaseStorageService {
                 .build();
 
         storage.create(blobInfo, file.getInputStream());
-
         return String.format("https://storage.googleapis.com/%s/%s", bucketName, fileName);
     }
 
@@ -71,5 +70,10 @@ public class FirebaseStorageService {
     // 파일 확장자 추출 메서드
     private String getExtension(String fileName) {
         return fileName != null ? fileName.substring(fileName.lastIndexOf(".")) : "";
+    }
+
+    public void deleteFile(String fileName) {
+        BlobId blobId = BlobId.of(bucketName, fileName);
+        storage.delete(blobId);
     }
 }
