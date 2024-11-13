@@ -1,6 +1,7 @@
 package com.yogo.metacraft.mapdata.service;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -11,11 +12,14 @@ public class RandomImageService {
 
     // 사용할 이미지 URL 리스트
     // bucket 이름 확인 필요
-    private static final List<String> DEFAULT_IMAGE_URLS = List.of(
-            "https://storage.googleapis.com/metacraft-48f9c.firebasestorage.app/sky.jpg",
-            "https://storage.googleapis.com/metacraft-48f9c.firebasestorage.app/arrow.jpg",
-            "https://storage.googleapis.com/metacraft-48f9c.firebasestorage.app/mountain.jpg",
-            "https://storage.googleapis.com/metacraft-48f9c.firebasestorage.app/galaxy.jpg"
+    @Value("${firebase.bucket-name}")
+    private static String bucketName;
+
+    public final List<String> DEFAULT_IMAGE_URLS = List.of(
+            "https://storage.googleapis.com/" + bucketName + "/sky.jpg",
+            "https://storage.googleapis.com/" + bucketName + "/arrow.jpg",
+            "https://storage.googleapis.com/" + bucketName + "/mountain.jpg",
+            "https://storage.googleapis.com/" + bucketName + "/galaxy.jpg"
     );
 
     private final Random random = new Random();
