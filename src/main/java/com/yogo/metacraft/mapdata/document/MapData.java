@@ -1,5 +1,6 @@
 package com.yogo.metacraft.mapdata.document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,5 +14,7 @@ public class MapData {
     private String id;  // MongoDB의 자동생성 ID
     private String mapName;
     private String thumbnail;  // Firebase Storage URL
+
+    @JsonProperty("InstanceDatas")
     private List<InstanceData> instanceData;
 }

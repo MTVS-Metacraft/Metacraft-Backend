@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Tag(name = "Map Data", description = "맵 데이터 관리 API")
 @RestController
 @RequestMapping("/api/map")
@@ -160,14 +162,13 @@ public class MapDataController {
     @PostMapping("/upload/no-image")
     public ResponseEntity<CustomApiResponse<MapData>> updateMapWithoutImage(@RequestBody MapDataDto mapDataDto) {
         System.out.println("updateMapWithoutImage" + mapDataDto);
-
         try {
             MultipartFile file = null;
             String imageUrl = firebaseService.uploadFile(file);
 
             MapData mapData = new MapData();
 
-            System.out.println("mapDataDtoController" + mapDataDto.toString());
+            log.info("mapDataDtoController" + mapDataDto.toString());
 
             mapData.setMapName(mapDataDto.getMapName());
             mapData.setInstanceData(mapDataDto.getInstanceData());
