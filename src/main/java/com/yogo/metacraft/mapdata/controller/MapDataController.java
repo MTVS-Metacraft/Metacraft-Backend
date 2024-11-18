@@ -2,13 +2,13 @@ package com.yogo.metacraft.mapdata.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yogo.metacraft.common.CustomApiResponse;
-import com.yogo.metacraft.mapdata.document.MapData;
-import com.yogo.metacraft.mapdata.document.MapDataCardDto;
-import com.yogo.metacraft.mapdata.document.MapDataDto;
-import com.yogo.metacraft.mapdata.document.PageResponseDto;
+import com.yogo.metacraft.common.SimpleApiResponse;
+import com.yogo.metacraft.mapdata.document.*;
 import com.yogo.metacraft.mapdata.exception.InvalidSortParameterException;
+import com.yogo.metacraft.mapdata.exception.MapDataException;
 import com.yogo.metacraft.mapdata.repository.MapDataRepository;
 import com.yogo.metacraft.mapdata.service.FirebaseStorageService;
+import com.yogo.metacraft.mapdata.service.MapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "Map Data", description = "맵 데이터 관리 API")
@@ -43,7 +44,7 @@ public class MapDataController {
 
     private final MapDataRepository mapDataRepository;
     private final FirebaseStorageService firebaseService;
-
+    private final MapService mapService;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -87,6 +88,38 @@ public class MapDataController {
         ));
     }
 
+    @Operation(summary = "MapData 카드 뷰 조회 (페이지네이션 없음)", description = "썸네일과 기본 정보만 포함된 MapData 카드 뷰를 페이지네이션 없이 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SimpleMapDataCardDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
+    })
+
+    @GetMapping("/cards-nopage")
+    public ResponseEntity<SimpleApiResponse<List<SimpleMapDataCardDto>>> getMapDataCardsNoPage(
+            @Parameter(description = "정렬 기준 (mapName, id 등)", example = "맵 이름")
+            @RequestParam(defaultValue = "mapName") String sortBy,
+            @Parameter(description = "정렬 방향 (ASC, DESC)", example = "asc")
+            @RequestParam(defaultValue = "ASC") String direction
+    ) {
+        log.info("Received request for cards-nopage");
+
+        try {
+            Sort.Direction sortDirection = Sort.Direction.fromString(direction.toUpperCase());
+            Sort sort = Sort.by(sortDirection, sortBy);
+
+            List<MapData> mapDataList = mapDataRepository.findAll(sort);
+            List<SimpleMapDataCardDto> cardDtos = mapDataList.stream()
+                    .map(SimpleMapDataCardDto::new)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(new SimpleApiResponse<>(cardDtos));
+        } catch (IllegalArgumentException e) {
+            throw new InvalidSortParameterException("Invalid sort direction: " + direction);
+        }
+    }
+
     @Operation(summary = "모든 MapData 조회", description = "데이터베이스에 저장된 모든 MapData를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
@@ -111,7 +144,6 @@ public class MapDataController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @Operation(summary = "MapData 및 이미지 업로드", description = "MapData와 함께 이미지를 업로드하고 저장합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "파일 업로드 및 데이터 저장 성공",
@@ -121,34 +153,27 @@ public class MapDataController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/upload")
-    public ResponseEntity<CustomApiResponse<MapData>> updateMapAndImage(
-            @Parameter(description = "업로드할 썸네일 이미지 파일", required = false,
-                    content = @Content(mediaType = "multipart/form-data",
-                            schema = @Schema(type = "string", format = "binary")),
-                    examples = @ExampleObject(value = "example_thumbnail.jpg"))
+    public ResponseEntity<SimpleApiResponse<MapData>> updateMapAndImage(
+            @Parameter(description = "업로드할 썸네일 이미지 파일", required = false)
             @RequestParam(value = "thumbnail", required = false) MultipartFile file,
-
-            @Parameter(description = "JSON 형식의 MapData 정보", required = true,
-                    examples = @ExampleObject(value = "{\"mapName\": \"SampleMap\", \"instanceData\": [...] }"))
+            @Parameter(description = "JSON 형식의 MapData 정보", required = true)
             @RequestParam("testData") String testDataJson) {
         try {
             MapDataDto mapDataDto = objectMapper.readValue(testDataJson, MapDataDto.class);
-            String imageUrl = firebaseService.uploadFile(file);
-
-            MapData mapData = new MapData();
-            mapData.setMapName(mapDataDto.getMapName());
-            mapData.setInstanceData(mapDataDto.getInstanceData());
-            mapData.setThumbnail(imageUrl);
-
-            MapData savedMapData = mapDataRepository.save(mapData);
-
-            return ResponseEntity.ok(new CustomApiResponse<>(true, "File uploaded and data saved successfully", savedMapData));
+            MapData savedMapData = mapService.uploadMapWithImage(file, mapDataDto);
+            return ResponseEntity.ok(new SimpleApiResponse<>(savedMapData));
+        } catch (MapDataException e) {
+            MapData errorData = null; // 또는 에러 정보를 담은 MapData 객체
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new SimpleApiResponse<>(errorData));
         } catch (IOException e) {
+            MapData errorData = null;
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new CustomApiResponse<>(false, "Failed to parse testData JSON"));
+                    .body(new SimpleApiResponse<>(errorData));
         } catch (Exception e) {
+            MapData errorData = null;
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new CustomApiResponse<>(false, "Failed to upload file or save data"));
+                    .body(new SimpleApiResponse<>(errorData));
         }
     }
 
@@ -160,27 +185,18 @@ public class MapDataController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @PostMapping("/upload/no-image")
-    public ResponseEntity<CustomApiResponse<MapData>> updateMapWithoutImage(@RequestBody MapDataDto mapDataDto) {
-        System.out.println("updateMapWithoutImage" + mapDataDto);
+    public ResponseEntity<SimpleApiResponse<MapData>> updateMapWithoutImage(@RequestBody MapDataDto mapDataDto) {
         try {
-            MultipartFile file = null;
-            String imageUrl = firebaseService.uploadFile(file);
-
-            MapData mapData = new MapData();
-
-            log.info("mapDataDtoController" + mapDataDto.toString());
-
-            mapData.setMapName(mapDataDto.getMapName());
-            mapData.setInstanceData(mapDataDto.getInstanceData());
-            mapData.setThumbnail(imageUrl);
-
-            System.out.println(imageUrl);
-            MapData savedMapData = mapDataRepository.save(mapData);
-
-            return ResponseEntity.ok(new CustomApiResponse<>(true, "Data saved successfully without image", savedMapData));
+            MapData savedMapData = mapService.uploadMapWithoutImage(mapDataDto);
+            return ResponseEntity.ok(new SimpleApiResponse<>(savedMapData));
+        } catch (MapDataException e) {
+            MapData errorData = null;
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new SimpleApiResponse<>(errorData));
         } catch (Exception e) {
+            MapData errorData = null;
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new CustomApiResponse<>(false, "Failed to save data"));
+                    .body(new SimpleApiResponse<>(errorData));
         }
     }
 
@@ -213,11 +229,7 @@ public class MapDataController {
     public ResponseEntity<?> getMapDataByMapNamePath(@PathVariable("mapName") String mapName) {
         List<MapData> mapDataList = mapDataRepository.findByMapName(mapName);
 
-        if (mapDataList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new CustomApiResponse(false, "MapData not found for mapName: " + mapName));
-        }
-        return ResponseEntity.ok(new CustomApiResponse(true, "MapData retrieved successfully", mapDataList));
+        return ResponseEntity.ok(new SimpleApiResponse<>(mapDataList));
     }
 
     @Operation(summary = "MapData 수정", description = "ID에 해당하는 MapData를 수정합니다.")

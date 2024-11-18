@@ -1,9 +1,15 @@
 package com.yogo.metacraft.mapdata.service;
 
+import com.yogo.metacraft.mapdata.document.MapData;
+import com.yogo.metacraft.mapdata.document.MapDataDto;
+import com.yogo.metacraft.mapdata.exception.MapDataException;
 import com.yogo.metacraft.mapdata.repository.MapDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @Transactional
@@ -14,18 +20,36 @@ public class MapService {
     private final FirebaseStorageService firebaseStorageService;
     private final SequenceGeneratorService sequenceGeneratorService;
 
-//    public TestData saveMapWithThumbnail(TestData data, MultipartFile thumbnail) throws IOException {
-//        // ID 생성
-//        if (data.getId() == null) {
-//            data.setId(sequenceGenerator.generateSequence(TestData.class.getSimpleName()));
-//        }
-//
-//        // 썸네일 이미지 업로드 및 URL 설정
-//        if (thumbnail != null && !thumbnail.isEmpty()) {
-//            String imageUrl = firebaseService.uploadFile(thumbnail);
-//            data.setThumbnail(imageUrl);
-//        }
-//
-//        return repository.save(data);
-//    }
+    public MapData uploadMapWithImage(MultipartFile file, MapDataDto mapDataDto) throws IOException {
+        // mapName 중복 검사
+        if (mapDataRepository.existsByMapName(mapDataDto.getMapName())) {
+            throw new MapDataException("Map name '" + mapDataDto.getMapName() + "' already exists");
+        }
+
+        String imageUrl = firebaseStorageService.uploadFile(file);
+
+        MapData mapData = new MapData();
+        mapData.setMapName(mapDataDto.getMapName());
+        mapData.setInstanceData(mapDataDto.getInstanceData());
+        mapData.setThumbnail(imageUrl);
+
+        return mapDataRepository.save(mapData);
+    }
+
+    public MapData uploadMapWithoutImage(MapDataDto mapDataDto) throws IOException {
+        // mapName 중복 검사
+        if (mapDataRepository.existsByMapName(mapDataDto.getMapName())) {
+            throw new MapDataException("Map name '" + mapDataDto.getMapName() + "' already exists");
+        }
+
+        MultipartFile file = null;
+        String imageUrl = firebaseStorageService.uploadFile(file);
+
+        MapData mapData = new MapData();
+        mapData.setMapName(mapDataDto.getMapName());
+        mapData.setInstanceData(mapDataDto.getInstanceData());
+        mapData.setThumbnail(imageUrl);
+
+        return mapDataRepository.save(mapData);
+    }
 }
