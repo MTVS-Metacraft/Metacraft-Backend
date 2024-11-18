@@ -17,6 +17,10 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+# Docker volumes
+mysql_data/
+mongodb_data/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -35,4 +39,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Firebase service account
 src/main/resources/metacraft-service-account.json
