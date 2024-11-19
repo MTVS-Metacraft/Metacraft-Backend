@@ -11,7 +11,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/metacraft
+    url: jdbc:mysql://mysql:3306/metacraft    # localhost가 아닌 mysql service name 사용
     username: metacraft
     password: 12345
   jpa:
@@ -23,15 +23,12 @@ spring:
     hibernate:
       ddl-auto: create
 
-  # MongoDB 설정
   data:
     mongodb:
-      host: localhost          # MongoDB 호스트
-      port: 27017             # MongoDB 포트
-      database: metacraft     # 데이터베이스 이름
-      # 또는 URI 형식으로도 설정 가능:
-      # uri: mongodb://localhost:27017/metacraft
+      host: mongodb          # localhost가 아닌 mongodb service name 사용
+      port: 27017
+      database: metacraft
 
 firebase:
   bucket-name: metacraft-3ff43.firebasestorage.app
-  config-path: metacraft-service-account.json
+  config-path: classpath:metacraft-service-account.json  # classpath: 접두사 추가 및 경로 수정
