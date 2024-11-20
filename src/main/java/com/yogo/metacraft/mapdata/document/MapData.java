@@ -13,6 +13,7 @@ public class MapData {
     @Id
     private String id;  // MongoDB의 자동생성 ID
     private String mapName;
+    private String userName;
     private String thumbnail;  // Firebase Storage URL
 
     @JsonProperty("InstanceDatas")

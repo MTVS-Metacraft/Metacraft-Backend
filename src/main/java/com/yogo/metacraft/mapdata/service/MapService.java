@@ -30,6 +30,7 @@ public class MapService {
 
         MapData mapData = new MapData();
         mapData.setMapName(mapDataDto.getMapName());
+        mapData.setUserName(mapDataDto.getUserName());
         mapData.setInstanceData(mapDataDto.getInstanceData());
         mapData.setThumbnail(imageUrl);
 
@@ -47,6 +48,7 @@ public class MapService {
 
         MapData mapData = new MapData();
         mapData.setMapName(mapDataDto.getMapName());
+        mapData.setUserName(mapDataDto.getUserName());
         mapData.setInstanceData(mapDataDto.getInstanceData());
         mapData.setThumbnail(imageUrl);
 

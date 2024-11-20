@@ -1,30 +1,16 @@
 package com.yogo.metacraft.mapdata.document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.ToString;
 
 import java.util.List;
 
+@Data
 @ToString
 public class MapDataDto {
     private String mapName;
+    private String userName;
     @JsonProperty("InstanceDatas")
     private List<InstanceData> instanceData;
-
-    // Getter, Setter
-    public String getMapName() {
-        return mapName;
-    }
-
-    public void setMapName(String mapName) {
-        this.mapName = mapName;
-    }
-
-    public List<InstanceData> getInstanceData() {
-        return instanceData;
-    }
-
-    public void setInstanceData(List<InstanceData> instanceData) {
-        this.instanceData = instanceData;
-    }
 }

@@ -12,7 +12,6 @@ import com.yogo.metacraft.mapdata.service.MapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -92,12 +91,12 @@ public class MapDataController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SimpleMapDataCardDto.class))),
+                            schema = @Schema(implementation = MapDataCardDto.class))),
             @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
 
     @GetMapping("/cards-nopage")
-    public ResponseEntity<SimpleApiResponse<List<SimpleMapDataCardDto>>> getMapDataCardsNoPage(
+    public ResponseEntity<SimpleApiResponse<List<MapDataCardDto>>> getMapDataCardsNoPage(
             @Parameter(description = "정렬 기준 (mapName, id 등)", example = "맵 이름")
             @RequestParam(defaultValue = "mapName") String sortBy,
             @Parameter(description = "정렬 방향 (ASC, DESC)", example = "asc")
@@ -110,8 +109,8 @@ public class MapDataController {
             Sort sort = Sort.by(sortDirection, sortBy);
 
             List<MapData> mapDataList = mapDataRepository.findAll(sort);
-            List<SimpleMapDataCardDto> cardDtos = mapDataList.stream()
-                    .map(SimpleMapDataCardDto::new)
+            List<MapDataCardDto> cardDtos = mapDataList.stream()
+                    .map(MapDataCardDto::new)
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(new SimpleApiResponse<>(cardDtos));
