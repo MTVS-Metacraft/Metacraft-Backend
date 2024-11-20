@@ -20,10 +20,9 @@ public class RandomImageService {
     @PostConstruct
     public void initDefaultImageUrls() {
         defaultImageUrls = List.of(
-                "https://storage.googleapis.com/" + bucketName + "/sky.jpg",
-                "https://storage.googleapis.com/" + bucketName + "/arrow.jpg",
-                "https://storage.googleapis.com/" + bucketName + "/mountain.jpg",
-                "https://storage.googleapis.com/" + bucketName + "/galaxy.jpg"
+                "https://storage.googleapis.com/" + bucketName + "/landscape.png",
+                "https://storage.googleapis.com/" + bucketName + "/nature.png",
+                "https://storage.googleapis.com/" + bucketName + "/cascade.png"
         );
     }
 
