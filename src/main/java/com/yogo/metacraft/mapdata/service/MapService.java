@@ -32,6 +32,8 @@ public class MapService {
         mapData.setMapName(mapDataDto.getMapName());
         mapData.setUserName(mapDataDto.getUserName());
         mapData.setInstanceData(mapDataDto.getInstanceData());
+        mapData.setPrefabData(mapDataDto.getPrefabData());
+        mapData.setVariables(mapDataDto.getVariables());
         mapData.setThumbnail(imageUrl);
 
         return mapDataRepository.save(mapData);
@@ -50,6 +52,8 @@ public class MapService {
         mapData.setMapName(mapDataDto.getMapName());
         mapData.setUserName(mapDataDto.getUserName());
         mapData.setInstanceData(mapDataDto.getInstanceData());
+        mapData.setPrefabData(mapDataDto.getPrefabData());
+        mapData.setVariables(mapDataDto.getVariables());
         mapData.setThumbnail(imageUrl);
 
         return mapDataRepository.save(mapData);

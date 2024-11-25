@@ -13,4 +13,8 @@ public class MapDataDto {
     private String userName;
     @JsonProperty("InstanceDatas")
     private List<InstanceData> instanceData;
+    @JsonProperty("prefabDatas")
+    private List<InstanceData> prefabData;
+    @JsonProperty("variables")
+    private List<String> variables;
 }
