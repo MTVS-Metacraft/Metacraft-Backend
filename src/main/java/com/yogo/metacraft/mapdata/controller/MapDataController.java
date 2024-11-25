@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -159,6 +160,10 @@ public class MapDataController {
             @RequestParam("testData") String testDataJson) {
         try {
             MapDataDto mapDataDto = objectMapper.readValue(testDataJson, MapDataDto.class);
+            // 변수 및 로직 추가 (variables 처리)
+            if (mapDataDto.getVariables() == null) {
+                mapDataDto.setVariables(new ArrayList<String>()); // 기본값 설정
+            }
             MapData savedMapData = mapService.uploadMapWithImage(file, mapDataDto);
             return ResponseEntity.ok(new SimpleApiResponse<>(savedMapData));
         } catch (MapDataException e) {
@@ -186,6 +191,9 @@ public class MapDataController {
     @PostMapping("/upload/no-image")
     public ResponseEntity<SimpleApiResponse<MapData>> updateMapWithoutImage(@RequestBody MapDataDto mapDataDto) {
         try {
+            if (mapDataDto.getVariables() == null) {
+                mapDataDto.setVariables(new ArrayList<String>()); // 기본값 설정
+            }
             MapData savedMapData = mapService.uploadMapWithoutImage(mapDataDto);
             return ResponseEntity.ok(new SimpleApiResponse<>(savedMapData));
         } catch (MapDataException e) {

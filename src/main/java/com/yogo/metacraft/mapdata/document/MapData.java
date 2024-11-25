@@ -18,4 +18,10 @@ public class MapData {
 
     @JsonProperty("InstanceDatas")
     private List<InstanceData> instanceData;
+
+    @JsonProperty("prefabDatas")
+    private List<InstanceData> prefabData;
+
+    @JsonProperty("variables")
+    private List<String> variables;
 }
